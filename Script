@@ -1,0 +1,177 @@
+CREATE TABLE modelos(
+				id_modelo integer NOT NULL, 
+				id_marca integer NOT NULL, 
+				modelo varchar(30) NOT NULL
+				);
+ALTER TABLE modelos
+    ADD CONSTRAINT pk_modelo PRIMARY KEY (id_modelo);
+
+   
+CREATE TABLE marcas(
+				id_marca integer NOT NULL, 
+				id_grupo_empresarial integer NOT NULL,
+				marca varchar(30) NOT NULL
+				);
+ALTER TABLE marcas
+	ADD CONSTRAINT pk_marca PRIMARY KEY (id_marca);
+
+
+
+CREATE TABLE grupos_empresariales(
+				id_grupo_empresarial integer NOT NULL, 
+				grupo_empresarial varchar(30) NOT NULL
+				);
+ALTER TABLE grupos_empresariales
+	ADD CONSTRAINT pk_grupo_empresarial PRIMARY KEY (id_grupo_empresarial);
+
+
+
+CREATE TABLE polizas_seguro(
+				id_poliza integer NOT NULL, 
+				id_coche integer NOT NULL, 
+				id_aseguradora integer NOT NULL, 
+				número_poliza integer NOT NULL
+				);
+ALTER TABLE polizas_seguro
+	ADD CONSTRAINT pk_poliza PRIMARY KEY (id_poliza);
+
+
+
+CREATE TABLE aseguradoras(
+				id_aseguradora integer NOT NULL, 
+				aseguradora varchar(30) NOT NULL
+				);
+ALTER TABLE aseguradoras
+	ADD CONSTRAINT pk_aseguradora PRIMARY KEY (id_aseguradora);
+
+
+
+CREATE TABLE divisas(
+				id_divisa integer NOT NULL, 
+				divisa varchar(30) NOT NULL
+				);
+ALTER TABLE divisas
+	ADD CONSTRAINT pk_divisa PRIMARY KEY (id_divisa);
+
+
+
+CREATE TABLE inspecciones_itv(				 
+				id_coche integer NOT NULL,
+                fecha_itv timestamp NOT NULL, 
+				id_divisa integer NOT NULL default '001', 
+				precio_itv integer NOT NULL
+                
+				);				
+ALTER TABLE inspecciones_itv
+	ADD CONSTRAINT pk_itv PRIMARY KEY (fecha_itv, id_coche);
+
+
+
+CREATE TABLE pinturas(
+				id_pintura integer NOT NULL, 
+				pintura varchar(30) NOT NULL
+				);
+ALTER TABLE pinturas
+	ADD CONSTRAINT pk_pintura PRIMARY KEY (id_pintura);
+
+
+
+CREATE TABLE coches(
+				id_coche integer NOT NULL, 
+				id_modelo integer NOT NULL, 
+				id_pintura integer NOT NULL, 
+				matrícula varchar(30) NOT NULL,
+                fecha_compra date NOT NULL,
+				kms integer NOT NULL
+				);			
+ALTER TABLE coches
+	ADD CONSTRAINT pk_coche PRIMARY KEY (id_coche);
+
+
+ALTER TABLE modelos
+	ADD CONSTRAINT  logos FOREIGN KEY (id_marca)
+	REFERENCES marcas (id_marca);
+
+ALTER TABLE marcas
+	ADD CONSTRAINT empresas FOREIGN KEY (id_grupo_empresarial)
+	REFERENCES grupos_empresariales (id_grupo_empresarial);
+
+ALTER TABLE polizas_seguro
+	ADD CONSTRAINT compañías FOREIGN KEY (id_aseguradora)
+	REFERENCES aseguradoras (id_aseguradora);
+
+ALTER TABLE polizas_seguro
+	ADD CONSTRAINT vehículos FOREIGN KEY (id_coche)
+	REFERENCES coches (id_coche);
+
+ALTER TABLE inspecciones_itv
+	ADD CONSTRAINT inspecciones FOREIGN KEY (id_coche)
+	REFERENCES coches(id_coche);
+
+ALTER TABLE inspecciones_itv
+	ADD CONSTRAINT pago_inspecciones FOREIGN KEY (id_divisa)
+	REFERENCES divisas(id_divisa);
+
+ALTER TABLE coches
+	ADD CONSTRAINT type_model FOREIGN KEY (id_modelo)
+	REFERENCES modelos (id_modelo);
+
+ALTER TABLE coches
+	ADD CONSTRAINT pinturas FOREIGN KEY (id_pintura)
+	REFERENCES pinturas (id_pintura);
+
+
+
+INSERT INTO grupos_empresariales
+	(id_grupo_empresarial, grupo_empresarial)
+	VALUES('001', 'seat_motor');
+INSERT INTO grupos_empresariales
+	(id_grupo_empresarial, grupo_empresarial)
+	VALUES('002', 'stellantis');
+INSERT INTO marcas
+	(id_marca, id_grupo_empresarial, marca)
+	VALUES('001', '001', 'seat');
+INSERT INTO marcas
+	(id_marca, id_grupo_empresarial, marca)
+	VALUES('002', '001', 'cupra');
+INSERT INTO marcas
+	(id_marca, id_grupo_empresarial, marca)
+	VALUES('003', '002', 'peugeot');
+INSERT INTO modelos
+	(id_modelo, id_marca, modelo)
+	VALUES('001', '001', 'ibiza');
+INSERT INTO modelos
+	(id_modelo, id_marca, modelo)
+	VALUES('002', '002', 'formentor');
+INSERT INTO modelos
+	(id_modelo, id_marca, modelo)
+	VALUES('003', '002', 'ateca');
+INSERT INTO modelos
+	(id_modelo, id_marca, modelo)
+	VALUES('004', '003', '3008');
+
+INSERT INTO pinturas
+	(id_pintura, pintura)
+	VALUES('001', 'blanco_polar');
+INSERT INTO pinturas
+	(id_pintura, pintura)
+	VALUES('002', 'gris_daytona');
+INSERT INTO pinturas
+	(id_pintura, pintura)
+	VALUES('003', 'negro_mitos');
+INSERT INTO pinturas
+	(id_pintura, pintura)
+	VALUES('004', 'azul_navarra');
+INSERT INTO aseguradoras
+	(id_aseguradora, aseguradora)
+	VALUES('001', 'mapfre');
+INSERT INTO aseguradoras
+	(id_aseguradora, aseguradora)
+	VALUES('002', 'reale');
+
+INSERT into divisas
+	(id_divisa, divisa)
+	VALUES('001', 'euro');
+INSERT into divisas
+	(id_divisa, divisa)
+	VALUES('002', 'dolar');
